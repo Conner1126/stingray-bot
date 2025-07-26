@@ -1,5 +1,5 @@
 import pygame
-import serial
+import pyserial
 import time
 
 def setup_serial():
@@ -34,16 +34,25 @@ def game_loop(ser, joystick, test_mode=False):
     try:
         while True:
             pygame.event.pump()
-            # Example: left stick vertical axis (axis 1)
+
+            # left stick vertical axis (axis 1)
             axis_val = joystick.get_axis(1)
             rpm = axis_to_rpm(-axis_val)  # invert if needed
+            # left stick horizontal axis (axis 0)
+            axis_val = joystick.get_axis(0)
+            # right trigger (axis 5)
+            rigt_axis_val = joystick.get_axis(5)
+            # left trigger (axis 2)
+            left_axis_val = joystick.get_axis(2)
 
+            debug_msg = f"Left: {axis_val:.2f}, Right: {rigt_axis_val:.2f}, Left Trigger: {left_axis_val:.2f}, Right Trigger: {rigt_axis_val:.2f}"
+            msg = f"STEP R{rigt_rpm:.2f} L{left_rpm:.2f}\n"
             if test_mode:
-                print(f"Test Mode: Axis Value: {axis_val:.2f}, RPM: {rpm:.2f}\n")
+                print(debug_msg)
                 continue
             else:
                 # Send RPM over serial (as string, e.g., "RPM:1234\n")
-                ser.write(f"RPM:{rpm}\n".encode())
+                ser.write(msg.encode())
 
             time.sleep(0.05)
     except KeyboardInterrupt:
