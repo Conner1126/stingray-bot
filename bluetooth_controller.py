@@ -1,5 +1,5 @@
 import pygame
-import pyserial
+import serial
 import time
 
 def setup_serial():
