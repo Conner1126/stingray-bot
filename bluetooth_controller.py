@@ -46,7 +46,7 @@ def game_loop(ser, joystick, test_mode=False):
             left_axis_val = joystick.get_axis(2)
 
             debug_msg = f"Left: {axis_val:.2f}, Right: {rigt_axis_val:.2f}, Left Trigger: {left_axis_val:.2f}, Right Trigger: {rigt_axis_val:.2f}"
-            msg = f"STEP R{rigt_rpm:.2f} L{left_rpm:.2f}\n"
+            # msg = f"STEP R{right_rpm:.2f} L{left_rpm:.2f}\n"
             if test_mode:
                 print(debug_msg)
                 continue
