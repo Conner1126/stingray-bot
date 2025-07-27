@@ -80,6 +80,9 @@ def game_loop(ser, joystick, test_mode=False):
             elif left_stick_horiz > LEFT_STICK_DEADZONE:
                 right_rpm = total_rpm * (1.0 - abs(left_stick_horiz) * DAMPING_COEFF)
                 left_rpm = total_rpm
+            else:
+                left_rpm = total_rpm
+                right_rpm = total_rpm
 
             # debug_msg = f"Left: {axis_val:.2f}, Right: {rigt_axis_val:.2f}, Left Trigger: {left_axis_val:.2f}, Right Trigger: {rigt_axis_val:.2f}"
             msg = f"STEP R{right_rpm:.2f} L{left_rpm:.2f}\n"
