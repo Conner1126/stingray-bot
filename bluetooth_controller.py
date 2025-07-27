@@ -91,9 +91,9 @@ def game_loop(ser, joystick, test_mode=False):
 
             # debug_msg = f"Left: {axis_val:.2f}, Right: {rigt_axis_val:.2f}, Left Trigger: {left_axis_val:.2f}, Right Trigger: {rigt_axis_val:.2f}"
             msg = f"STEP R{right_rpm:.2f} L{left_rpm:.2f}\n"
+            print(msg)
             if test_mode:
                 # print(debug_msg)
-                print(msg)
                 continue
             else:
                 # Send RPM over serial (as string, e.g., "RPM:1234\n")
