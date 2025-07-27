@@ -34,29 +34,57 @@ def game_loop(ser, joystick, test_mode=False):
     try:
         while True:
             pygame.event.pump()
+            # axis 0: left stick horizontal
+            # 1: left vertical (inverted)
+            # 2: right horizontal
+            # 3: right vertical (inverted)
+            # 4: right trigger
+            # 5: left trigger
 
-            # left stick vertical axis (axis 1)
-            axis_val = joystick.get_axis(1)
-            rpm = axis_to_rpm(-axis_val)  # invert if needed
+            # button 0: A
+            # 1: B
 
-            # Read all axes
-            axes = [joystick.get_axis(i) for i in range(joystick.get_numaxes())]
+            # hat 0: d pad horizontal
+            # hat 1: d pad vertical (not inverted)
 
-            # Read all buttons
-            buttons = [joystick.get_button(i) for i in range(joystick.get_numbuttons())]
+            # Get controller inputs
+            left_stick_horiz = joystick.get_axis(0)
+            right_trigger = joystick.get_axis(4)
+            left_trigger = joystick.get_axis(5)
+            dpad_horiz = joystick.get_hat(0)[0]
+            
+            # right trigger for forward speed
+            right_trigger += 1.0  # make it positive
+            right_trigger /= 2.0  # scale to 0.0 to 1.0
+            total_for_rpm = axis_to_rpm(right_trigger)
 
-            # Read all hats (D-pad)
-            hats = [joystick.get_hat(i) for i in range(joystick.get_numhats())]
+            # left trigger for reverse speed
+            left_trigger += 1.0  # make it positive
+            left_trigger /= 2.0
+            total_rev_rpm = axis_to_rpm(left_trigger)
 
-            print("Axes:", ["{:.3f}".format(a) for a in axes])
-            print("Buttons:", buttons)
-            print("Hats:", hats)
-            print("-" * 40)
+            # determine direction
+            if total_for_rpm > total_rev_rpm:
+                direction = 1
+                total_rpm = total_for_rpm
+            else:
+                direction = -1
+                total_rpm = total_rev_rpm                
+
+            # adjust individual wheel RPMs based on left stick
+            DAMPING_COEFF = 0.9
+            if left_stick_horiz < 0:
+                left_rpm = total_rpm * (1.0 - abs(left_stick_horiz) * DAMPING_COEFF)
+                right_rpm = total_rpm
+            else:
+                right_rpm = total_rpm * (1.0 - abs(left_stick_horiz) * DAMPING_COEFF)
+                left_rpm = total_rpm
 
             # debug_msg = f"Left: {axis_val:.2f}, Right: {rigt_axis_val:.2f}, Left Trigger: {left_axis_val:.2f}, Right Trigger: {rigt_axis_val:.2f}"
-            # msg = f"STEP R{right_rpm:.2f} L{left_rpm:.2f}\n"
+            msg = f"STEP R{right_rpm:.2f} L{left_rpm:.2f}\n"
             if test_mode:
                 # print(debug_msg)
+                print(msg)
                 continue
             else:
                 # Send RPM over serial (as string, e.g., "RPM:1234\n")
