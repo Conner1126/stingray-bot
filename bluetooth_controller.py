@@ -52,6 +52,7 @@ def game_loop(ser, joystick, test_mode=False):
             right_trigger = joystick.get_axis(4)
             left_trigger = joystick.get_axis(5)
             dpad_horiz = joystick.get_hat(0)[0]
+            button_b = joystick.get_button(1)
             
             # right trigger for forward speed
             right_trigger += 1.0  # make it positive
@@ -70,6 +71,10 @@ def game_loop(ser, joystick, test_mode=False):
             else:
                 direction = -1
                 total_rpm = -total_rev_rpm                
+
+            # if B button is pressed, boost speed
+            if button_b:
+                total_rpm *= 1.5
 
             # adjust individual wheel RPMs based on left stick
             DAMPING_COEFF = 0.9
