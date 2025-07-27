@@ -69,14 +69,15 @@ def game_loop(ser, joystick, test_mode=False):
                 total_rpm = total_for_rpm
             else:
                 direction = -1
-                total_rpm = total_rev_rpm                
+                total_rpm = -total_rev_rpm                
 
             # adjust individual wheel RPMs based on left stick
             DAMPING_COEFF = 0.9
-            if left_stick_horiz < 0:
+            LEFT_STICK_DEADZONE = 0.1
+            if left_stick_horiz < -LEFT_STICK_DEADZONE:
                 left_rpm = total_rpm * (1.0 - abs(left_stick_horiz) * DAMPING_COEFF)
                 right_rpm = total_rpm
-            else:
+            elif left_stick_horiz > LEFT_STICK_DEADZONE:
                 right_rpm = total_rpm * (1.0 - abs(left_stick_horiz) * DAMPING_COEFF)
                 left_rpm = total_rpm
 
