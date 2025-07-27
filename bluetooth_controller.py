@@ -89,6 +89,9 @@ def game_loop(ser, joystick, test_mode=False):
                 left_rpm = total_rpm
                 right_rpm = total_rpm
 
+            # fix left motor direction
+            left_rpm *= -1
+
             # debug_msg = f"Left: {axis_val:.2f}, Right: {rigt_axis_val:.2f}, Left Trigger: {left_axis_val:.2f}, Right Trigger: {rigt_axis_val:.2f}"
             msg = f"STEP R{right_rpm:.2f} L{left_rpm:.2f}\n"
             print(msg)
