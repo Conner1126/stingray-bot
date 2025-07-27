@@ -107,7 +107,7 @@ def game_loop(ser, joystick, test_mode=False):
         pygame.quit()
 
 if __name__ == "__main__":
-    # ser = setup_serial()
-    ser = None
+    ser = setup_serial()
+    # ser = None
     joystick = setup_joystick()
-    game_loop(ser, joystick, test_mode=True)
+    game_loop(ser, joystick, test_mode=False)
