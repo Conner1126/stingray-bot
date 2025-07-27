@@ -99,7 +99,7 @@ def game_loop(ser, joystick, test_mode=False):
                 # Send RPM over serial (as string, e.g., "RPM:1234\n")
                 ser.write(msg.encode())
 
-            time.sleep(1)
+            time.sleep(0.05)
     except KeyboardInterrupt:
         pass
     finally:
