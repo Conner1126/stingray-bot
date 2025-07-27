@@ -12,7 +12,7 @@ def setup_serial():
         print(f"Error opening serial port: {e}")
         exit()
 
-def axis_to_rpm(axis_val, MIN_RPM = 0, MAX_RPM = 60):
+def axis_to_rpm(axis_val, MIN_RPM = 0, MAX_RPM = 100):
     # Map -1.0 to 1.0 to MIN_RPM to MAX_RPM
     return axis_val * (MAX_RPM - MIN_RPM) + MIN_RPM
 
@@ -74,7 +74,7 @@ def game_loop(ser, joystick, test_mode=False):
 
             # if B button is pressed, boost speed
             if button_b:
-                total_rpm *= 1.5
+                total_rpm *= 1.8
 
             # adjust individual wheel RPMs based on left stick
             DAMPING_COEFF = 0.9
@@ -88,6 +88,15 @@ def game_loop(ser, joystick, test_mode=False):
             else:
                 left_rpm = total_rpm
                 right_rpm = total_rpm
+
+            # override controls with crab turn
+            CRAB_TURN_RPM = 40
+            if dpad_horiz < 0:
+                left_rpm = -CRAB_TURN_RPM
+                right_rpm = CRAB_TURN_RPM
+            elif dpad_horiz > 0:
+                left_rpm = CRAB_TURN_RPM
+                right_rpm = -CRAB_TURN_RPM
 
             # fix left motor direction
             left_rpm *= -1
